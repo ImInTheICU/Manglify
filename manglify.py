@@ -163,8 +163,14 @@ final_names: list = [
     get_unique_name(), # 27
     get_unique_name(), # 28
     get_unique_name(), # 29
+    get_unique_name(), # 30
+    get_unique_name(), # 31
+    get_unique_name(), # 32
+    get_unique_name(), # 33
+    get_unique_name(), # 34
+    get_unique_name(), # 35
 ]
-const_assignments = [
+const_assignments: list = [
     (final_names[0], chunked_dict),
     (final_names[7], 'bytes'),
     (final_names[8], 'bytearray'),
@@ -179,7 +185,9 @@ const_assignments = [
     (final_names[21], '__import__'),
     (final_names[22], 'dict'),
     (final_names[24], 'abs'),
-    (final_names[25], 'globals')
+    (final_names[25], 'globals'),
+    (final_names[30], 'exec'),
+    (final_names[35], 'globals'),
 ]
 
 random.shuffle(const_assignments)
@@ -187,18 +195,18 @@ random.shuffle(const_assignments)
 final: str = f"""
 {";".join([imp for imp in imports])};{";".join([f"{name} = {value}" for name, value in const_assignments])}
 {f"\n{final_names[23]} = {str(tree).replace("'", "")}; ({final_names[23]})"}
-{final_names[19]} = lambda {final_names[26]}: exec(''.join({final_names[2]}({final_names[15]}({final_names[9]}({final_names[27]})[:1]), {final_names[1]}({final_names[6]}, {final_names[26]})) for {final_names[27]}, {final_names[6]} in {final_names[0]}.items()), {final_names[22]}())
-{final_names[20]} = lambda {final_names[28]}: ({final_names[21]}('{to_octal_escape(f"gc{' ' * random.randint(5, 25)}")}'.strip()).collect())!=({final_names[28]}) if {final_names[21]}('{to_octal_escape(f'random{' ' * random.randint(5, 25)}')}'.strip()).randint(1,10) == {random.randint(1,10)} else {final_names[21]}('{to_octal_escape(f"gc{' ' * random.randint(5, 25)}")}'.strip()).get_objects()
+{final_names[19]} = lambda {final_names[26]}: {final_names[30]}(''.join({final_names[2]}({final_names[15]}({final_names[9]}({final_names[27]})[:1]), {final_names[1]}({final_names[6]}, {final_names[26]})) for {final_names[27]}, {final_names[6]} in {final_names[0]}.items()), {final_names[22]}())
+{final_names[20]} = lambda {final_names[28]}: ({final_names[21]}('{to_octal_escape(f"gc{' ' * random.randint(5, 25)}")}'.strip()).collect())!=({final_names[28]}) if {final_names[21]}('{to_octal_escape(f'random{' ' * random.randint(5, 25)}')}'.strip()).randint({final_names[15]}('{to_octal_escape(f"1{' ' * random.randint(5, 25)}")}'),{final_names[15]}('{to_octal_escape(f"10{' ' * random.randint(5, 25)}")}')) == {random.randint(1,10)} else {final_names[21]}('{to_octal_escape(f"gc{' ' * random.randint(5, 25)}")}'.strip()).get_objects()
 
 def {final_names[1]}({final_names[3]},{final_names[4]}):
-	G='utf-8';H=lambda {final_names[17]}:{final_names[7]}.fromhex({final_names[17]});I=lambda {final_names[4]}:{final_names[8]}({final_names[9]}({final_names[4]}),G);J=lambda x:(lambda y:y+42)(x*3);K=lambda x:(lambda y:y[::-1])({final_names[9]}(x));L=lambda:(lambda p:(lambda q:q*2)(p+7))(100);M=lambda z:z**3-10*z+7;Q=J(23);R=K(12);S=L();T=M(10);N=lambda a1b2z,z2b1:{final_names[8]}([a1b2z[{final_names[8]}]^z2b1[{final_names[8]}%{final_names[11]}(z2b1)]for {final_names[8]} in {final_names[10]}({final_names[11]}(a1b2z))]);C=(lambda a:a+1)(5);E=(lambda x:x*2-3)(7);F=(lambda y:y//2+10)(20)
+	{final_names[31]}='{to_octal_escape(f"utf-8{' ' * random.randint(5, 25)}")}'.strip();{final_names[32]}=lambda {final_names[17]}:{final_names[7]}.fromhex({final_names[17]});{final_names[33]}=lambda {final_names[4]}:{final_names[8]}({final_names[9]}({final_names[4]}),{final_names[31]});{final_names[34]}=lambda x:(lambda y:y+42)(x*3);K=lambda x:(lambda y:y[::-1])({final_names[9]}(x));L=lambda:(lambda p:(lambda q:q*2)(p+7))(100);M=lambda z:z**3-10*z+7;Q={final_names[34]}(23);R=K(12);S=L();T=M(10);N=lambda a1b2z,z2b1:{final_names[8]}([a1b2z[{final_names[8]}]^z2b1[{final_names[8]}%{final_names[11]}(z2b1)]for {final_names[8]} in {final_names[10]}({final_names[11]}(a1b2z))]);C=(lambda a:a+1)(5);E=(lambda x:x*2-3)(7);F=(lambda y:y//2+10)(20)
 	if C>10:F=E*2
 	else:E=C+F
 	def O(input_value):
 		{final_names[8]}=input_value;E=0
 		for C in {final_names[10]}(0,{final_names[11]}({final_names[8]}),2):E+={final_names[12]}({final_names[8]}[C])-{final_names[12]}({final_names[8]}[C-1])if C>0 else 0
 		return E
-	O('{os.urandom(random.randint(32,64)).hex()}');P=lambda {final_names[18]}:{final_names[18]}.decode(G);return P(N(H({final_names[3]}),I({final_names[4]})))
+	O('{os.urandom(random.randint(32,64)).hex()}');P=lambda {final_names[18]}:{final_names[18]}.decode({final_names[31]});return P(N({final_names[32]}({final_names[3]}),{final_names[33]}({final_names[4]})))
 
 def {final_names[2]}({final_names[5]},{final_names[6]}):
 	I='z';H='a';G='A';C='';K=lambda x:(lambda y:(lambda z:z(y))(M(y)))({final_names[25]}().get('y',None));M=lambda x:x[::-1];N={final_names[12]}(G)+{final_names[12]}('B')
@@ -217,8 +225,8 @@ def {final_names[2]}({final_names[5]},{final_names[6]}):
 	return K({final_names[6]})if {final_names[16]}({final_names[6]},{final_names[9]})else R({final_names[9]}({final_names[5]}))
 
 for {final_names[29]} in range({final_names[15]}('{to_octal_escape(f"1000{' ' * random.randint(5, 25)}")}'.strip()), {final_names[15]}('{to_octal_escape(f"{' ' * random.randint(5, 25)}9999")}'.strip())):
-    try: {final_names[19]} ( {final_names[29]} )
-    except: {final_names[20]} ( {final_names[29]} )
+    try: {final_names[35]}().get('{final_names[19]}', None)( {final_names[29]} )
+    except: {final_names[35]}().get('{final_names[20]}', None)( {final_names[29]} )
 
             """.strip()
 
