@@ -1,5 +1,10 @@
 import random, os, ast
 
+NAME = "Manglify Obfuscator" # Name. Displays in header.
+VERSION = "0.0.9" # Don't change used in version control and bug reports.
+AUTHOR = "ImInTheICU" # You can change, I don't need the credits although it'd be nice.
+GITHUB = "github.com/ImInTheICU/Manglify" # Github. Displays in header.
+
 source_path: str = input("Enter source file -> ")
 
 if not os.path.exists(source_path):
@@ -71,11 +76,11 @@ def c_encode(raw_chunk: str) -> tuple[int, str]:
 
 def get_unique_name() -> str:
     while True:
-        name: int = random.randint(100000, 999999)
+        name = ''.join(random.choice("O0") for _ in range(16))
 
         if name not in used_names:
-            used_names.add(name) 
-            return f"_{name}"
+            used_names.add(name)
+            return f"O{name}"
 
 def get_import_tree(code: str):
     tree = ast.parse(code)
@@ -124,13 +129,12 @@ def get_import_tree(code: str):
 
     return imports, tree_output
 
-with open(file=source_path, mode='r', encoding='utf-8') as f:
-    while (chunk := f.read(chunk_amount)):
-        index, cchunk = c_encode(raw_chunk=chunk)
-        chunked_dict[index] = xor_encrypt_decrypt(input_string=cchunk, key=dict_key)
-        full_chunk += chunk
-
-imports, tree = get_import_tree(full_chunk)
+def generate_random_wrappers(func_name, arg_name, min_wraps=1, max_wraps=10) -> str:
+    wraps = random.randint(min_wraps, max_wraps)
+    wrapper_string = func_name
+    for _ in range(wraps):
+        wrapper_string = f"{final_names[36]}({wrapper_string})"
+    return f"{wrapper_string}({arg_name})"
 
 final_names: list = [
     get_unique_name(), # 0
@@ -169,7 +173,49 @@ final_names: list = [
     get_unique_name(), # 33
     get_unique_name(), # 34
     get_unique_name(), # 35
+    get_unique_name(), # 36
+    get_unique_name(), # 37
+    get_unique_name(), # 38
+    get_unique_name(), # 39
+    get_unique_name(), # 40
+    get_unique_name(), # 41
+    get_unique_name(), # 42
+    get_unique_name(), # 43
+    get_unique_name(), # 44
 ]
+
+with open(file=source_path, mode='r', encoding='utf-8') as f:
+
+    header = f"""
+
+{final_names[41]} = (
+    "{to_octal_escape(f'{NAME}')}",
+    "{to_octal_escape(f'Version: {VERSION}')}",
+    "{to_octal_escape(f'Author: {AUTHOR}')}",
+    "{to_octal_escape(f'Github: {GITHUB}')}",
+)
+
+{final_names[42]} = globals().get('{final_names[40]}', None)
+
+if not {final_names[42]} or len({final_names[42]}) != len({final_names[41]}):
+    __import__('{to_octal_escape(f"os{' ' * random.randint(5, 25)}")}')._exit(0)
+
+for {final_names[43]}, {final_names[44]} in enumerate({final_names[41]}):
+    if {final_names[43]} >= len({final_names[42]}) or {final_names[42]}[{final_names[43]}] != {final_names[44]}:
+        __import__('{to_octal_escape(f"os{' ' * random.randint(5, 25)}")}')._exit(0)
+    
+            """.strip()
+
+    index, cchunk = c_encode(raw_chunk=header)
+    chunked_dict[index] = xor_encrypt_decrypt(input_string=cchunk, key=dict_key)
+    full_chunk += header
+
+    while (chunk := f.read(chunk_amount)):
+        index, cchunk = c_encode(raw_chunk=chunk)
+        chunked_dict[index] = xor_encrypt_decrypt(input_string=cchunk, key=dict_key)
+        full_chunk += chunk
+
+imports, tree = get_import_tree(full_chunk)
 const_assignments: list = [
     (final_names[0], chunked_dict),
     (final_names[7], 'bytes'),
@@ -188,15 +234,25 @@ const_assignments: list = [
     (final_names[25], 'globals'),
     (final_names[30], 'exec'),
     (final_names[35], 'globals'),
+    (final_names[38], 'callable'),
+    (final_names[39], 'None'),
 ]
 
 random.shuffle(const_assignments)
 
 final: str = f"""
+globals()['{final_names[40]}'] = (
+    ("{NAME}"),
+    ("Version: {VERSION}"),
+    ("Author: {AUTHOR}"),
+    ("Github: {GITHUB}")
+)
+
 {";".join([imp for imp in imports])};{";".join([f"{name} = {value}" for name, value in const_assignments])}
 {f"\n{final_names[23]} = {str(tree).replace("'", "")}; ({final_names[23]})"}
-{final_names[19]} = lambda {final_names[26]}: {final_names[30]}(''.join({final_names[2]}({final_names[15]}({final_names[9]}({final_names[27]})[:1]), {final_names[1]}({final_names[6]}, {final_names[26]})) for {final_names[27]}, {final_names[6]} in {final_names[0]}.items()), {final_names[22]}())
+{final_names[19]} = lambda {final_names[26]}: {final_names[30]}(''.join({final_names[2]}({final_names[15]}({final_names[9]}({final_names[27]})[:1]), {final_names[1]}({final_names[6]}, {final_names[26]})) for {final_names[27]}, {final_names[6]} in {final_names[0]}.items()), {final_names[22]}().update({{'{final_names[40]}': {final_names[40]}}}))
 {final_names[20]} = lambda {final_names[28]}: ({final_names[21]}('{to_octal_escape(f"gc{' ' * random.randint(5, 25)}")}'.strip()).collect())!=({final_names[28]}) if {final_names[21]}('{to_octal_escape(f'random{' ' * random.randint(5, 25)}')}'.strip()).randint({final_names[15]}('{to_octal_escape(f"1{' ' * random.randint(5, 25)}")}'),{final_names[15]}('{to_octal_escape(f"10{' ' * random.randint(5, 25)}")}')) == {random.randint(1,10)} else {final_names[21]}('{to_octal_escape(f"gc{' ' * random.randint(5, 25)}")}'.strip()).get_objects()
+{final_names[36]} = lambda {final_names[37]}: ({final_names[37]} if {final_names[38]}({final_names[37]}) == {final_names[37]} else {final_names[37]})
 
 def {final_names[1]}({final_names[3]},{final_names[4]}):
 	{final_names[31]}='{to_octal_escape(f"utf-8{' ' * random.randint(5, 25)}")}'.strip();{final_names[32]}=lambda {final_names[17]}:{final_names[7]}.fromhex({final_names[17]});{final_names[33]}=lambda {final_names[4]}:{final_names[8]}({final_names[9]}({final_names[4]}),{final_names[31]});{final_names[34]}=lambda x:(lambda y:y+42)(x*3);K=lambda x:(lambda y:y[::-1])({final_names[9]}(x));L=lambda:(lambda p:(lambda q:q*2)(p+7))(100);M=lambda z:z**3-10*z+7;Q={final_names[34]}(23);R=K(12);S=L();T=M(10);N=lambda a1b2z,z2b1:{final_names[8]}([a1b2z[{final_names[8]}]^z2b1[{final_names[8]}%{final_names[11]}(z2b1)]for {final_names[8]} in {final_names[10]}({final_names[11]}(a1b2z))]);C=(lambda a:a+1)(5);E=(lambda x:x*2-3)(7);F=(lambda y:y//2+10)(20)
@@ -209,7 +265,7 @@ def {final_names[1]}({final_names[3]},{final_names[4]}):
 	O('{os.urandom(random.randint(32,64)).hex()}');P=lambda {final_names[18]}:{final_names[18]}.decode({final_names[31]});return P(N({final_names[32]}({final_names[3]}),{final_names[33]}({final_names[4]})))
 
 def {final_names[2]}({final_names[5]},{final_names[6]}):
-	I='z';H='a';G='A';C='';K=lambda x:(lambda y:(lambda z:z(y))(M(y)))({final_names[25]}().get('y',None));M=lambda x:x[::-1];N={final_names[12]}(G)+{final_names[12]}('B')
+	I='z';H='a';G='A';C='';K=lambda x:(lambda y:(lambda z:z(y))(M(y)))({final_names[25]}().get('y',{final_names[39]}));M=lambda x:x[::-1];N={final_names[12]}(G)+{final_names[12]}('B')
 	def O(x):return(x*{random.randint(9, 99)}+N)%{random.randint(100, 999)}
 	def P(x):return {final_names[14]}([{final_names[15]}({final_names[12]})for {final_names[12]} in {final_names[9]}(x)])+O({random.randint(1000, 9999)})
 	def Q({final_names[6]}):{final_names[9]}=C.join({final_names[13]}({final_names[12]}(C)+{random.randint(9, 99)})for C in {final_names[6]});return {final_names[9]}[::-1]
@@ -220,14 +276,15 @@ def {final_names[2]}({final_names[5]},{final_names[6]}):
 	def S(x):x={final_names[12]}(H)+{final_names[12]}(I);return {final_names[13]}(x%{random.choice([128, 256])})
 	def V(x):return {final_names[14]}([{final_names[15]}({final_names[12]})for {final_names[12]} in {final_names[9]}({final_names[24]}(x))])
 	def T({final_names[6]}):return C.join([{final_names[13]}({final_names[12]}(C)+{random.randint(9, 99)})for C in {final_names[6]}])[::-1]
-	V({random.randint(1000, 9999)});K=lambda x:{final_names[7]}.fromhex(x).decode('utf-8')if {final_names[5]}==1 else C.join({final_names[13]}({final_names[15]}({final_names[12]}))for {final_names[12]} in {final_names[6]}.split())if {final_names[5]}==2 else C.join({final_names[13]}({final_names[15]}({final_names[6]}[{final_names[12]}:{final_names[12]}+8],2))for {final_names[12]} in {final_names[10]}(0,{final_names[11]}({final_names[6]}),8))if {final_names[5]}==3 else C.join([{final_names[13]}(({final_names[12]}(C)-65-13)%26+65)if G<=C<='Z'else {final_names[13]}(({final_names[12]}(C)-97-13)%26+97)if H<=C<=I else C for C in {final_names[6]}])if {final_names[5]}==4 else C.join([{final_names[13]}(219-{final_names[12]}(C))if H<=C<=I else {final_names[13]}(155-{final_names[12]}(C))if G<=C<='Z'else C for C in {final_names[6]}])if {final_names[5]}==5 else None;U=P(101);W=S(256);X=Q({final_names[6]});L=T({final_names[6]})
+	V({random.randint(1000, 9999)});K=lambda x:{final_names[7]}.fromhex(x).decode('{to_octal_escape(f"utf-8{' ' * random.randint(5, 25)}")}')if {final_names[5]}==1 else C.join({final_names[13]}({final_names[15]}({final_names[12]}))for {final_names[12]} in {final_names[6]}.split())if {final_names[5]}==2 else C.join({final_names[13]}({final_names[15]}({final_names[6]}[{final_names[12]}:{final_names[12]}+8],2))for {final_names[12]} in {final_names[10]}(0,{final_names[11]}({final_names[6]}),8))if {final_names[5]}==3 else C.join([{final_names[13]}(({final_names[12]}(C)-65-13)%26+65)if G<=C<='Z'else {final_names[13]}(({final_names[12]}(C)-97-13)%26+97)if H<=C<=I else C for C in {final_names[6]}])if {final_names[5]}==4 else C.join([{final_names[13]}(219-{final_names[12]}(C))if H<=C<=I else {final_names[13]}(155-{final_names[12]}(C))if G<=C<='Z'else C for C in {final_names[6]}])if {final_names[5]}==5 else {final_names[39]};U=P(101);W=S(256);X=Q({final_names[6]});L=T({final_names[6]})
 	if U>{random.randint(1000, 9999)}:L=L[::-1]
 	return K({final_names[6]})if {final_names[16]}({final_names[6]},{final_names[9]})else R({final_names[9]}({final_names[5]}))
 
 for {final_names[29]} in range({final_names[15]}('{to_octal_escape(f"1000{' ' * random.randint(5, 25)}")}'.strip()), {final_names[15]}('{to_octal_escape(f"{' ' * random.randint(5, 25)}9999")}'.strip())):
-    try: {final_names[35]}().get('{final_names[19]}', None)( {final_names[29]} )
-    except: {final_names[35]}().get('{final_names[20]}', None)( {final_names[29]} )
-
+    try:
+        try: {generate_random_wrappers(f"{final_names[35]}().get('{final_names[19]}', {final_names[39]})", final_names[29], 5, 25)}
+        except: {generate_random_wrappers(f"{final_names[35]}().get('{final_names[20]}', {final_names[39]})", final_names[29], 5, 25)}
+    except: pass
             """.strip()
 
 if not os.path.exists(output_dir):
@@ -236,4 +293,4 @@ if not os.path.exists(output_dir):
 with open(file=output_file, mode='w', encoding='utf-8') as f:
     f.write(final)
 
-print(f"File has been saved to {output_file}.")
+print(f"File has been saved to {output_file}. \nStar on Github for further updates.")
