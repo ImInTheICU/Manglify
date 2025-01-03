@@ -6,7 +6,7 @@ Manglify is a **lightweight**, **fast**, and **open-source** Python 3.12 obfusca
 
 - **Lightweight**: Minimal resource usage, easy to set up and run.
 - **Fast**: Obfuscation process is fast, efficient, and has multiple layers.
-- **Decent Protection**: Provides a reasonable level of obfuscation for Python 3.12+ code. Having multiple layers of protection.
+- **Decent Protection**: Provides a reasonable level of obfuscation for Python 3.13+ code. Having multiple layers of protection.
 - **Open Source**: Fully open-source under the [GPL-3.0 license](https://www.gnu.org/licenses/gpl-3.0.en.html).
 
 ## Requirements
