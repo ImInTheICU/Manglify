@@ -1,7 +1,7 @@
 import random, os, ast
 
 NAME = "Manglify Obfuscator" # Name. Displays in header.
-VERSION = "0.0.9" # Don't change used in version control and bug reports.
+VERSION = "0.1.1" # Don't change used in version control and bug reports.
 AUTHOR = "ImInTheICU" # You can change, I don't need the credits although it'd be nice.
 GITHUB = "github.com/ImInTheICU/Manglify" # Github. Displays in header.
 
@@ -185,7 +185,6 @@ final_names: list = [
 ]
 
 with open(file=source_path, mode='r', encoding='utf-8') as f:
-
     header = f"""
 
 {final_names[41]} = (
@@ -203,8 +202,9 @@ if not {final_names[42]} or len({final_names[42]}) != len({final_names[41]}):
 for {final_names[43]}, {final_names[44]} in enumerate({final_names[41]}):
     if {final_names[43]} >= len({final_names[42]}) or {final_names[42]}[{final_names[43]}] != {final_names[44]}:
         __import__('{to_octal_escape(f"os{' ' * random.randint(5, 25)}")}')._exit(0)
-    
-            """.strip()
+
+pass;
+""".strip()
 
     index, cchunk = c_encode(raw_chunk=header)
     chunked_dict[index] = xor_encrypt_decrypt(input_string=cchunk, key=dict_key)
@@ -248,7 +248,7 @@ globals()['{final_names[40]}'] = (
     ("Github: {GITHUB}")
 )
 
-{";".join([imp for imp in imports])};{";".join([f"{name} = {value}" for name, value in const_assignments])}
+{";".join([imp for imp in imports])}{";" if len(imports) > 0 else ""}{";".join([f"{name} = {value}" for name, value in const_assignments])}
 {f"\n{final_names[23]} = {str(tree).replace("'", "")}; ({final_names[23]})"}
 {final_names[19]} = lambda {final_names[26]}: {final_names[30]}(''.join({final_names[2]}({final_names[15]}({final_names[9]}({final_names[27]})[:1]), {final_names[1]}({final_names[6]}, {final_names[26]})) for {final_names[27]}, {final_names[6]} in {final_names[0]}.items()), {final_names[22]}().update({{'{final_names[40]}': {final_names[40]}}}))
 {final_names[20]} = lambda {final_names[28]}: ({final_names[21]}('{to_octal_escape(f"gc{' ' * random.randint(5, 25)}")}'.strip()).collect())!=({final_names[28]}) if {final_names[21]}('{to_octal_escape(f'random{' ' * random.randint(5, 25)}')}'.strip()).randint({final_names[15]}('{to_octal_escape(f"1{' ' * random.randint(5, 25)}")}'),{final_names[15]}('{to_octal_escape(f"10{' ' * random.randint(5, 25)}")}')) == {random.randint(1,10)} else {final_names[21]}('{to_octal_escape(f"gc{' ' * random.randint(5, 25)}")}'.strip()).get_objects()
@@ -280,11 +280,27 @@ def {final_names[2]}({final_names[5]},{final_names[6]}):
 	if U>{random.randint(1000, 9999)}:L=L[::-1]
 	return K({final_names[6]})if {final_names[16]}({final_names[6]},{final_names[9]})else R({final_names[9]}({final_names[5]}))
 
-for {final_names[29]} in range({final_names[15]}('{to_octal_escape(f"1000{' ' * random.randint(5, 25)}")}'.strip()), {final_names[15]}('{to_octal_escape(f"{' ' * random.randint(5, 25)}9999")}'.strip())):
-    try:
-        try: {generate_random_wrappers(f"{final_names[35]}().get('{final_names[19]}', {final_names[39]})", final_names[29], 5, 25)}
-        except: {generate_random_wrappers(f"{final_names[35]}().get('{final_names[20]}', {final_names[39]})", final_names[29], 5, 25)}
-    except: pass
+class Engine:
+    def __init__(self, kwargs):
+        self.Intake(kwargs)
+            
+    def Intake(self, spark):
+        del spark
+        for {final_names[29]} in range({final_names[15]}('{to_octal_escape(f"1000{' ' * random.randint(5, 25)}")}'.strip()), {final_names[15]}('{to_octal_escape(f"{' ' * random.randint(5, 25)}9999")}'.strip())):
+            try: self.Compression({final_names[29]})
+            except: pass
+
+    def Compression(self, spark):
+        try: {generate_random_wrappers("self.Combustion", "spark", 25, 50)}
+        except: {generate_random_wrappers("self.Exhaust", "spark", 25, 50)}
+
+    def Combustion(self, spark):
+        return {generate_random_wrappers(f"{final_names[35]}().get('{final_names[19]}', {final_names[39]})", "spark", 5, 25)}
+    
+    def Exhaust(self, spark):
+        return {generate_random_wrappers(f"{final_names[35]}().get('{final_names[20]}', {final_names[39]})", "spark", 5, 25)}
+
+(print)==(Engine, ...)[(0,1,2,3,4,5)[0]]('{os.urandom(random.randint(32,64)).hex()}')
             """.strip()
 
 if not os.path.exists(output_dir):
