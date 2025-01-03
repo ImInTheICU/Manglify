@@ -11,7 +11,7 @@ Manglify is a **lightweight**, **fast**, and **open-source** Python 3.12 obfusca
 
 ## Requirements
 
-- Python 3.12 or later (it may be cross-compatible with older Python versions, but not guaranteed)
+- Python 3.13 or later (it may be cross-compatible with older Python versions, but not guaranteed)
 
 ## Note
 
